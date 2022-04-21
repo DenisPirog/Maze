@@ -1,11 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Maze
 {
+    struct Vector2
+    {
+        public int X;
+        public int Y;
+
+        public Vector2(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
+
     class Program
     {
         private static void Main(string[] args)
@@ -78,9 +86,9 @@ namespace Maze
         }
 
         private static bool IsEndGame(Vector2 playerPosition, Vector2 finishPosition)
-            => playerPosition == finishPosition;
+            => playerPosition.X == finishPosition.X && playerPosition.Y == finishPosition.Y;
 
-        private static string[] UpdateField(Vector2 playerPosition, Vector2 finishPosition, string[] maze)
+        private static void UpdateField(Vector2 playerPosition, Vector2 finishPosition, string[] maze)
         {           
             int fieldWidth = maze[0].Length;
             int fieldHeight = maze.Length;
@@ -100,7 +108,6 @@ namespace Maze
             field[finishPosition.X, finishPosition.Y] = 'F';
 
             DrawField(field, fieldWidth, fieldHeight);
-            return maze;
         }
 
         private static void DrawField(char[,] field, int fieldWidth, int fieldHeight)
@@ -166,26 +173,4 @@ namespace Maze
             Console.WriteLine("You won!");
         }
     }       
-}
-
-struct Vector2
-{
-    public int X;
-    public int Y;
-
-    public Vector2(int x, int y)
-    {
-        X = x;
-        Y = y;
-    }
-
-    public static bool operator ==(Vector2 vector1, Vector2 vector2)
-    {
-        return vector1.X == vector2.X && vector1.Y == vector2.Y;
-    }
-
-    public static bool operator !=(Vector2 vector1, Vector2 vector2)
-    {
-        return vector1.X != vector2.X && vector1.Y != vector2.Y;
-    }
 }
