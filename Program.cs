@@ -16,17 +16,7 @@ namespace Maze
 
     class Program
     {
-        private static void Main(string[] args)
-        {          
-            GameLoop();           
-        }
-
-        private static void GameLoop()
-        {
-            Vector2 playerPosition = new Vector2(67, 10);
-            Vector2 finishPosition = new Vector2(3, 10);
-
-            string[] maze =
+        private static string[] maze = 
             {
                 "███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████",
                 "██                                ██            ██          ██      ██            ██                  ██          ██        ██   ██",
@@ -38,12 +28,12 @@ namespace Maze
                 "██    ██  ████  ████████      ██████████  ██  ██  ████          ██  ██    ██████████  ██  ████      ████  ██      ██  ████  ██   ██",
                 "████████    ██        ██████████      ██  ██  ██    ██  ██████████  ████      ██      ██    ██████  ████  ████  ████             ██",
                 "██    ████  ████████              ██      ██    ██      ██  ████      ██████████  ██  ████  ██  ██████      ██  ████  ██    ███████",
-                "██ F              ██  ████████  ████  ██  ████    ████████                        ██  ████          ██  ██            ████  ██   ██",
+                "██                ██  ████████  ████  ██  ████    ████████                        ██  ████          ██  ██            ████  ██   ██",
                 "██    ████████  ████████    ██  ██  ████    ████  ██  ██    ████      ██████  ██  ██    ██  ██████      ████  ██████  ████  ██   ██",
                 "████████████    ██        ████  ██      ██                ██  ████  ████  ██  ██  ████  ██      ██  ██  ████            ██  ██   ██",
                 "██        ██  ██    ████  ████████  ██  ██  ████████████  ██  ██    ████      ██    ██████████  ██  ██    ██  ████████  ██████   ██",
                 "██████  ████  ██  ██████      ██    ██  ██████    ██  ██  ██  ██    ██████  ██████  ██      ██  ██  ████  ██████  ██    ██       ██",
-                "██            ██  ████    ████████  ██  ██            ██  ██  ████  ████    ██  ██  ██  ██  ██  ██    ██  ██      ██    ████████████",
+                "██            ██  ████    ████████  ██  ██            ██  ██  ████  ████    ██  ██  ██  ██  ██  ██    ██  ██      ██    ███████████",
                 "████  ██████████  ██    ████        ██      ████  ██  ██  ██                ██  ██████  ██  ██  ████      ██  ██  ████  ██     ████",
                 "██    ██          ██  ████    ████████  ██    ██  ██  ██████████████    ██████  ██      ██  ████████  ██  ██  ██        ██       ██",
                 "██  ████  ██████████  ████  ████████    ████  ██████  ████    ████████████████  ██  ██████  ██        ██  ██████  ██  ████  ██   ██",
@@ -51,13 +41,23 @@ namespace Maze
                 "███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████",
             };
 
+        private static void Main(string[] args)
+        {          
+            GameLoop();           
+        }
+
+        private static void GameLoop()
+        {
+            Vector2 playerPosition = new Vector2(67, 10);
+            Vector2 finishPosition = new Vector2(3, 10);
+
             OpenStartMenu();
             if (IsGameStarted())
             {
                 while (!IsEndGame(playerPosition, finishPosition))
                 {
-                    UpdateField(playerPosition, finishPosition, maze);
-                    playerPosition = Logic(Input(), playerPosition, maze);
+                    UpdateField(playerPosition, finishPosition);
+                    playerPosition = Logic(Input(), playerPosition);
                     Console.Clear();
                 }
                 EndGame();
@@ -88,7 +88,7 @@ namespace Maze
         private static bool IsEndGame(Vector2 playerPosition, Vector2 finishPosition)
             => playerPosition.X == finishPosition.X && playerPosition.Y == finishPosition.Y;
 
-        private static void UpdateField(Vector2 playerPosition, Vector2 finishPosition, string[] maze)
+        private static void UpdateField(Vector2 playerPosition, Vector2 finishPosition)
         {           
             int fieldWidth = maze[0].Length;
             int fieldHeight = maze.Length;
@@ -122,10 +122,10 @@ namespace Maze
             }
         }
 
-        private static Vector2 Logic(Vector2 inputResult, Vector2 playerPosition, string[] maze)
+        private static Vector2 Logic(Vector2 inputResult, Vector2 playerPosition)
         {
             Vector2 newPlayerPosition = new Vector2(playerPosition.X + inputResult.X, playerPosition.Y + inputResult.Y);
-            return TryMove(newPlayerPosition, playerPosition, maze);
+            return TryMove(newPlayerPosition, playerPosition);
         }
 
         private static Vector2 Input()
@@ -152,16 +152,16 @@ namespace Maze
             return inputResult;
         }  
 
-        private static Vector2 TryMove(Vector2 newPlayerPosition, Vector2 playerPosition, string[] maze)
+        private static Vector2 TryMove(Vector2 newPlayerPosition, Vector2 playerPosition)
         {
-            if (IsWalkable(newPlayerPosition, maze))
+            if (IsWalkable(newPlayerPosition))
             {
                 return newPlayerPosition;
             }
             return playerPosition;      
         }
 
-        private static bool IsWalkable(Vector2 newPlayerPosition, string[] maze)
+        private static bool IsWalkable(Vector2 newPlayerPosition)
         {
             char[] line = maze[newPlayerPosition.Y].ToCharArray();
             return line[newPlayerPosition.X].ToString() != "█";
